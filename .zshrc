@@ -17,15 +17,14 @@ alias la='exa -a --color=always --group-directories-first'  # all files and dirs
 alias ll='exa -l --color=always --group-directories-first'  # long format
 alias lt='exa -aT --color=always --group-directories-first' # tree listing
 alias l.='exa -a | egrep "^\."'
-alias cp="cp -i"
+alias cp="cp -i" # -i flag asks to confirm changes
 alias mv='mv -i'
 alias rm='rm -i'
-alias weather='curl wttr.in'
+alias weather='curl wttr.in' 
 alias sudo='doas'
-alias sudoedit='doas rnano'
-
-
-
+alias pacs="pacman -Slq | fzf --multi --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S"
+alias pacr="pacman -Qq | fzf --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns"
+alias open='fzf | xargs xdg-open'
 
 
 
