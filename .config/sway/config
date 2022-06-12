@@ -19,10 +19,11 @@ set $nag exec swaynag -t warning -m 'You pressed the exit shortcut. Do you reall
 set $wallpaper ~/Pictures/wallpapers/F32_wallpaper_twilight.png 
 ## executables
 exec wlsunset -l 57 -L 24
+exec mako
 ## keybindings
 bindsym $mod+Return exec $term
 bindsym $mod+d exec $menu
-bindsym $mod+Shift+q kill # Kills the focused window
+bindsym $mod+Shift+q kill
 bindsym $mod+Shift+e $nag
 bindsym $mod+Print exec $screenshots
 floating_modifier $mod normal
@@ -72,7 +73,7 @@ bindsym $mod+v splitv
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
-bindsym $mod+f fullscreen # fullscreens focused window
+bindsym $mod+f fullscreen 
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 bindsym $mod+Shift+minus move scratchpad
