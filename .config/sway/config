@@ -4,22 +4,24 @@ set $left h
 set $down j
 set $up k
 set $right l 
-set $term alacritty
+set $term footclient
 set $keyboard 'lv'
 set $screenshots grim -g "$(slurp)" /home/bonter/Pictures/screenshots/$(date +"%Y%m%d%H%M%S").png 
 # Function for programmatically taking a screenshot in a wayland environment
 set $volutil exec pulsemixer --change-volume  
 # Function for programmatically changing the volume that takes $volchrateas its argument
-set $volchrate 2 
+set $chrate 2 
 # argument for $volutil. The rate at which the volume gets changed
 set $font "Ubuntu 10" 
 # Variable for controlling the font in the bar, menu and window decoration
 set $menu rofi -show drun -font $font -show-icons
 set $nag exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 set $wallpaper ~/Pictures/wallpapers/F32_wallpaper_twilight.png 
+set $rofifiles exec rofi -show filebrowser
 ## executables
 exec wlsunset -l 57 -L 24
 exec mako
+exec foot --server
 ## keybindings
 bindsym $mod+Return exec $term
 bindsym $mod+d exec $menu
@@ -86,13 +88,16 @@ bindsym ctrl+Left resize shrink width 10px
 bindsym ctrl+Down resize grow height 10px
 bindsym ctrl+Up resize shrink height 10px
 bindsym ctrl+Right resize grow width 10px
-bindsym $mod+x $volutil $volchrate 
-bindsym $mod+z $volutil -$volchrate
+bindsym $mod+x $volutil $chrate 
+bindsym $mod+z $volutil -$chrate
+bindsym $mod+p $rofifiles
 ##Wallpaper
 output * bg $wallpaper fill
 ## keyboard config
 input "type:keyboard" {
   xkb_layout $keyboard
+  xkb_capslock enable
+  xkb_numlock enable
 }
 ## idle config
 exec swayidle -w \
