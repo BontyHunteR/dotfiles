@@ -11,9 +11,8 @@ set $screenshots grim -g "$(slurp)" /home/bonter/Pictures/screenshots/$(date +"%
 set $volutil exec pulsemixer --change-volume  
 # Function for programmatically changing the volume that takes $volchrateas its argument
 set $chrate 2 
-# argument for $volutil. The rate at which the volume gets changed
-set $font "Ubuntu 10" 
-# Variable for controlling the font in the bar, menu and window decoration
+# argument for $volutil. The rate at which the volume gets changedset $font "UbuntuMono Nerd Font 10" 
+set $font "UbuntuMono Nerd Font 11" 
 set $menu rofi -show drun -font $font -show-icons
 set $nag exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 set $wallpaper ~/Pictures/wallpapers/F32_wallpaper_twilight.png 
@@ -22,6 +21,10 @@ set $rofifiles exec rofi -show filebrowser
 exec wlsunset -l 57 -L 24
 exec mako
 exec foot --server
+set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
+exec MOZ_ENABLE_WAYLAND=1
+exec rm -f $WOBSOCK && mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
+exec --no-startup-id /usr/lib/xdg-desktop-portal -r
 ## keybindings
 bindsym $mod+Return exec $term
 bindsym $mod+d exec $menu
@@ -88,15 +91,19 @@ bindsym ctrl+Left resize shrink width 10px
 bindsym ctrl+Down resize grow height 10px
 bindsym ctrl+Up resize shrink height 10px
 bindsym ctrl+Right resize grow width 10px
-bindsym $mod+x $volutil $chrate 
-bindsym $mod+z $volutil -$chrate
 bindsym $mod+p $rofifiles
+#Volume
+bindsym $mod+x exec pamixer -ui 2 && pamixer --get-volume > $WOBSOCK
+bindsym $mod+z exec pamixer -ud 2 && pamixer --get-volume > $WOBSOCK
+bindsym $mod+c exec pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > $WOBSOCK ) || pamixer --get-volume > $WOBSOCK
+#brightness
+bindsym $mod+m exec light -A 5 && light -G | cut -d'.' -f1 > $WOBSOCK
+bindsym $mod+n exec light -U 5 && light -G | cut -d'.' -f1 > $WOBSOCK
 ##Wallpaper
 output * bg $wallpaper fill
 ## keyboard config
 input "type:keyboard" {
   xkb_layout $keyboard
-  xkb_capslock enable
   xkb_numlock enable
 }
 ## idle config
@@ -105,11 +112,12 @@ exec swayidle -w \
     timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
     before-sleep 'swaylock -f -c 000000'
 ## bar config
-    bar {
+bar {
      position top
      mode hide
      font pango: $font
-     status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
+     #status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
+     status_command i3status-rs
      colors {
              background         #073642
              statusline         #eee8d5
@@ -119,10 +127,10 @@ exec swayidle -w \
      }
  }
 # window decoration config
-client.focused          #b58900 #b58900 #fdf6e3 #cb4b16
+client.focused          #d33682 #d33682 #fdf6e3 #cb4b16
 client.focused_inactive #073642 #073642 #fdf6e3 #073642
 client.unfocused        #073642 #073642 #fdf6e3 #073642
-default_border none
+default_border pixel 0
 gaps inner 10
 font pango: $font 
 # sys config
